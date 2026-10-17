@@ -39,6 +39,7 @@ export default function StatWheel({
         type="button"
         className={className}
         onClick={() => {
+          if (Math.abs(position) === 3) return;
           select();
           setCurrent(current + position);
         }}

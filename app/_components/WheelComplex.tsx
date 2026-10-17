@@ -1,6 +1,7 @@
 "use client";
 
 import { type Dispatch, type SetStateAction, useState } from "react";
+import InputWheel from "../../components/InputWheel";
 import SetWheel from "./SetWheel";
 import StatWheel from "./StatWheel";
 
@@ -52,24 +53,23 @@ export default function WheelComplex({
   };
 
   return (
-    <div
-      className="flex-1 flex h-full items-center justify-center pl-5"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      <SetWheel
-        sets={sets}
-        current={currentSet}
-        setCurrent={(s) => {
-          setCurrentSet(s);
-        }}
-      />
+    <div className="flex h-full items-center justify-center pl-5">
+      <div
+        className="w-full h-full flex items-center"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <TitleAligner>
+          <SetWheel
+            sets={sets}
+            current={currentSet}
+            setCurrent={(s) => {
+              setCurrentSet(s);
+            }}
+          />
+        </TitleAligner>
 
-      <div className="flex w-full">
-        <div className="flex flex-col w-full">
-          <span className="w-full grid place-items-center text-zinc-500 h-6 text-xl">
-            Reps
-          </span>
+        <TitleAligner title="Reps" className="flex flex-col w-full">
           <StatWheel
             stats={repsStats}
             current={currentSet}
@@ -81,12 +81,9 @@ export default function WheelComplex({
               setHighlightedStat(0);
             }}
           />
-          <span className="h-6" />
-        </div>
-        <div className="flex flex-col w-full">
-          <span className="w-full grid place-items-center text-zinc-500 h-6 text-xl">
-            Weight
-          </span>
+        </TitleAligner>
+
+        <TitleAligner title="Weight" className="flex flex-col w-full">
           <StatWheel
             stats={weightStats}
             current={currentSet}
@@ -98,11 +95,36 @@ export default function WheelComplex({
               setHighlightedStat(1);
             }}
           />
-          <span className="h-6" />
-        </div>
+        </TitleAligner>
       </div>
 
-      <div className="w-24 shrink-0 h-full" />
+      <div className="w-24 shrink-0 h-full grid place-items-center">
+        <InputWheel value={0} min={0} max={0} changeValue={() => {}} />
+      </div>
+    </div>
+  );
+}
+
+interface TitleAligner {
+  children: React.ReactNode;
+  className: string;
+  title?: string;
+}
+
+function TitleAligner({ children, title, className }: TitleAligner) {
+  return (
+    <div className={className}>
+      {title !== undefined ? (
+        <span className="w-full grid place-items-center text-zinc-500 h-6 text-xl">
+          {title}
+        </span>
+      ) : (
+        <span className="h-6" />
+      )}
+
+      {children}
+
+      <span className="h-6" />
     </div>
   );
 }
