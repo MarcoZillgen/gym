@@ -15,7 +15,7 @@ export default function InputWheel({
   className,
   ...props
 }: InputWheelProps) {
-  const stepSize = 20;
+  const _stepSize = 20;
 
   return (
     <div {...props}>

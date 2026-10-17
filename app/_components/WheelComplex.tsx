@@ -1,6 +1,7 @@
 "use client";
 
 import { type Dispatch, type SetStateAction, useState } from "react";
+import { cn } from "@/lib/cn";
 import InputWheel from "../../components/InputWheel";
 import SetWheel from "./SetWheel";
 import StatWheel from "./StatWheel";
@@ -69,7 +70,7 @@ export default function WheelComplex({
           />
         </TitleAligner>
 
-        <TitleAligner title="Reps" className="flex flex-col w-full">
+        <TitleAligner title="Reps" className="w-full">
           <StatWheel
             stats={repsStats}
             current={currentSet}
@@ -83,7 +84,7 @@ export default function WheelComplex({
           />
         </TitleAligner>
 
-        <TitleAligner title="Weight" className="flex flex-col w-full">
+        <TitleAligner title="Weight" className="w-full">
           <StatWheel
             stats={weightStats}
             current={currentSet}
@@ -107,15 +108,20 @@ export default function WheelComplex({
 
 interface TitleAligner {
   children: React.ReactNode;
-  className: string;
+  className?: string;
   title?: string;
 }
 
-function TitleAligner({ children, title, className }: TitleAligner) {
+function TitleAligner({ children, title, className = "" }: TitleAligner) {
   return (
     <div className={className}>
       {title !== undefined ? (
-        <span className="w-full grid place-items-center text-zinc-500 h-6 text-xl">
+        <span
+          className={cn(
+            "w-full grid place-items-center text-zinc-500 h-6 text-xl",
+            className,
+          )}
+        >
           {title}
         </span>
       ) : (

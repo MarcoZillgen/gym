@@ -11,7 +11,7 @@ import WheelComplex from "./_components/WheelComplex";
 
 export default function Home() {
   const [currentSet, setCurrentSet] = useState(3);
-  const [currentExercise, setCurrentExercise] = useState(2);
+  const [currentExercise, _setCurrentExercise] = useState(2);
   const [workout, setWorkout] = useState([
     [],
     [],
