@@ -30,19 +30,20 @@ export default function Home() {
   ]);
 
   return (
-    <div className="bg-zinc-200 w-screen h-screen flex flex-col">
+    <div className="bg-zinc-100 w-screen h-screen flex flex-col">
       <header className="w-full h-17.5 flex text-zinc-900">
-        <div className="aspect-square h-full grid place-items-center">
+        <button
+          type="button"
+          className="aspect-square h-full grid place-items-center"
+        >
           <Cross2Icon width={30} height={30} />
-        </div>
+        </button>
 
         <div className="w-full h-full grid place-items-center text-xl font-normal">
           Crunch Machine
         </div>
 
-        <div className="aspect-square h-full grid place-items-center">
-          <Cross2Icon width={30} height={30} />
-        </div>
+        <div className="aspect-square h-full grid place-items-center"></div>
       </header>
 
       <div className="flex-1">
@@ -58,9 +59,12 @@ export default function Home() {
       <ProgressBar segments={workout.length} current={currentExercise} />
 
       <footer className="w-full h-17.5 flex text-zinc-900">
-        <div className="aspect-square h-full grid place-items-center">
+        <button
+          type="button"
+          className="aspect-square h-full grid place-items-center"
+        >
           <ListBulletIcon width={30} height={30} />
-        </div>
+        </button>
 
         <div className="w-full h-full grid place-items-center text-xl font-normal">
           22:45

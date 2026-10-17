@@ -66,28 +66,40 @@ export default function WheelComplex({
       />
 
       <div className="flex w-full">
-        <StatWheel
-          stats={repsStats}
-          current={currentSet}
-          setCurrent={(s) => {
-            setCurrentSet(s);
-          }}
-          selected={highlightedStat === 0}
-          select={() => {
-            setHighlightedStat(0);
-          }}
-        />
-        <StatWheel
-          stats={weightStats}
-          current={currentSet}
-          setCurrent={(s) => {
-            setCurrentSet(s);
-          }}
-          selected={highlightedStat === 1}
-          select={() => {
-            setHighlightedStat(1);
-          }}
-        />
+        <div className="flex flex-col w-full">
+          <span className="w-full grid place-items-center text-zinc-500 h-6 text-xl">
+            Reps
+          </span>
+          <StatWheel
+            stats={repsStats}
+            current={currentSet}
+            setCurrent={(s) => {
+              setCurrentSet(s);
+            }}
+            selected={highlightedStat === 0}
+            select={() => {
+              setHighlightedStat(0);
+            }}
+          />
+          <span className="h-6" />
+        </div>
+        <div className="flex flex-col w-full">
+          <span className="w-full grid place-items-center text-zinc-500 h-6 text-xl">
+            Weight
+          </span>
+          <StatWheel
+            stats={weightStats}
+            current={currentSet}
+            setCurrent={(s) => {
+              setCurrentSet(s);
+            }}
+            selected={highlightedStat === 1}
+            select={() => {
+              setHighlightedStat(1);
+            }}
+          />
+          <span className="h-6" />
+        </div>
       </div>
 
       <div className="w-24 shrink-0 h-full" />
