@@ -1,29 +1,36 @@
-"use client"
+"use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import SetWheel from "./SetWheel";
 import StatWheel from "./StatWheel";
 
-interface WheelComplexProps{
-  currentSet: number
-  setCurrentSet: Dispatch<SetStateAction<number>>
-  workout: { weight: number, reps: number, done: boolean }[][]
-  setWorkout: Dispatch<SetStateAction<{ weight: number, reps: number, done: boolean }[][]>>
-  currentExercise: number
+interface WheelComplexProps {
+  currentSet: number;
+  setCurrentSet: Dispatch<SetStateAction<number>>;
+  workout: { weight: number; reps: number; done: boolean }[][];
+  setWorkout: Dispatch<
+    SetStateAction<{ weight: number; reps: number; done: boolean }[][]>
+  >;
+  currentExercise: number;
 }
 
-export default function WheelComplex({currentSet, setCurrentSet, workout, setWorkout, currentExercise }:WheelComplexProps) {
+export default function WheelComplex({
+  currentSet,
+  setCurrentSet,
+  workout,
+  currentExercise,
+}: WheelComplexProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [highlightedStat, setHighlightedStat] = useState<number>(0)
+  const [highlightedStat, setHighlightedStat] = useState<number>(0);
 
-  const sets:boolean[] = []
-  const repsStats:number[] = []
-  const weightStats:number[] = []
-  workout[currentExercise].map(set => {
-    sets.push(set.done)
-    repsStats.push(set.reps)
-    weightStats.push(set.weight)
-  })
+  const sets: boolean[] = [];
+  const repsStats: number[] = [];
+  const weightStats: number[] = [];
+  workout[currentExercise].forEach((set) => {
+    sets.push(set.done);
+    repsStats.push(set.reps);
+    weightStats.push(set.weight);
+  });
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.touches[0].clientY);
@@ -50,14 +57,40 @@ export default function WheelComplex({currentSet, setCurrentSet, workout, setWor
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <SetWheel sets={sets} current={currentSet} setCurrent={(s)=>{setCurrentSet(s)}} />
-      
+      <SetWheel
+        sets={sets}
+        current={currentSet}
+        setCurrent={(s) => {
+          setCurrentSet(s);
+        }}
+      />
+
       <div className="flex w-full">
-        <StatWheel stats={repsStats} current={currentSet} setCurrent={(s)=>{setCurrentSet(s)}} selected={highlightedStat===0} select={()=>{setHighlightedStat(0)}} />
-        <StatWheel stats={weightStats} current={currentSet} setCurrent={(s) => { setCurrentSet(s) }} selected={highlightedStat === 1} select={() => { setHighlightedStat(1) }} />
+        <StatWheel
+          stats={repsStats}
+          current={currentSet}
+          setCurrent={(s) => {
+            setCurrentSet(s);
+          }}
+          selected={highlightedStat === 0}
+          select={() => {
+            setHighlightedStat(0);
+          }}
+        />
+        <StatWheel
+          stats={weightStats}
+          current={currentSet}
+          setCurrent={(s) => {
+            setCurrentSet(s);
+          }}
+          selected={highlightedStat === 1}
+          select={() => {
+            setHighlightedStat(1);
+          }}
+        />
       </div>
-      
+
       <div className="w-24 shrink-0 h-full" />
     </div>
-  )
+  );
 }

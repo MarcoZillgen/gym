@@ -23,10 +23,11 @@ export default function SetWheel({ sets, current, setCurrent }: SetWheelProps) {
       !isDone && "text-zinc-500",
       position === 0 && "my-3 font-medium",
       Math.abs(position) === 1 && "opacity-50",
-      Math.abs(position) === 2 && "opacity-25"
+      Math.abs(position) === 2 && "opacity-25",
+      Math.abs(position) === 3 && "opacity-0"
     );
 
-    return <div className={className} onClick={()=>{setCurrent(current + position)}}>{item}</div>;
+    return <button type="button" className={className} onClick={()=>{setCurrent(current + position)}}>{item}</button>;
   };
 
   return <DisplayWheel items={items} current={current} renderItem={renderItem} />;
