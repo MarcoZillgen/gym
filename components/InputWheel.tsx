@@ -2,7 +2,7 @@
 
 import {
   type CSSProperties,
-  type PointerEvent,
+  type MouseEvent,
   type UIEvent,
   useLayoutEffect,
   useRef,
@@ -43,19 +43,19 @@ export default function InputWheel({
   const count = max - min + 1;
   const ref = useRef<HTMLDivElement>(null);
   const lastRef = useRef<number | null>(null);
-  const targetRef = useRef<number | null>(null); // parent val change scroll target
+  const targetRef = useRef<number | null>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el || lastRef.current === value) return; // user scroll
+    if (!el || lastRef.current === value) return;
     const isMount = lastRef.current === null;
     lastRef.current = value;
-    if (!isMount) targetRef.current = value - min;
+    if (!isMount) targetRef.current = max - value;
     el.scrollTo({
-      top: (value - min) * PITCH,
+      top: (max - value) * PITCH,
       behavior: isMount ? "instant" : "auto",
     });
-  }, [value, min]);
+  }, [value, max]);
 
   const onScroll = (e: UIEvent<HTMLDivElement>) => {
     const top = e.currentTarget.scrollTop;
@@ -64,17 +64,16 @@ export default function InputWheel({
         targetRef.current = null;
       return;
     }
-    const next =
-      min + Math.max(0, Math.min(count - 1, Math.round(top / PITCH)));
+    const index = Math.max(0, Math.min(count - 1, Math.round(top / PITCH)));
+    const next = max - index;
     if (next !== lastRef.current) {
       lastRef.current = next;
       changeValue(next);
     }
   };
 
-  // user stops auto scroll
   const interrupt = (
-    e: WheelEvent<HTMLDivElement> | PointerEvent<HTMLDivElement>,
+    e: WheelEvent<HTMLDivElement> | MouseEvent<HTMLDivElement>,
   ) => {
     if (targetRef.current === null) return;
     targetRef.current = null;
@@ -84,7 +83,35 @@ export default function InputWheel({
     });
   };
 
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const clickY = e.clientY - rect.top;
+    const centerY = rect.height / 2;
+
+    if (Math.abs(clickY - centerY) < 16) return;
+
+    if (clickY < centerY) {
+      const next = Math.min(max, value + 1);
+      if (next !== value) {
+        targetRef.current = max - next;
+        changeValue(next);
+        el.scrollTo({ top: (max - next) * PITCH, behavior: "instant" });
+      }
+    } else {
+      const next = Math.max(min, value - 1);
+      if (next !== value) {
+        targetRef.current = max - next;
+        changeValue(next);
+        el.scrollTo({ top: (max - next) * PITCH, behavior: "instant" });
+      }
+    }
+  };
+
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: mobile app doesnt need keyboard
     <div
       ref={ref}
       role="slider"
@@ -96,9 +123,9 @@ export default function InputWheel({
       onScroll={onScroll}
       onScrollEnd={() => (targetRef.current = null)}
       onWheel={interrupt}
-      onPointerDown={interrupt}
+      onClick={handleClick}
       className={cn(
-        "flex flex-col items-center overflow-y-auto overscroll-contain snap-y snap-mandatory scrollbar-none motion-safe:scroll-smooth",
+        "flex flex-col items-center overflow-y-auto overscroll-contain snap-y snap-proximity scrollbar-none motion-safe:scroll-smooth touch-pan-y cursor-pointer",
         "before:block before:h-[calc(50%-8px)] before:w-full before:shrink-0",
         "after:block after:h-[calc(50%-8px)] after:w-full after:shrink-0",
         className,
@@ -106,7 +133,7 @@ export default function InputWheel({
       style={containerMask}
     >
       {Array.from({ length: count }, (_, i) => {
-        const tick = min + i;
+        const tick = max - i;
         return (
           <div
             key={tick}
