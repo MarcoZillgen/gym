@@ -6,7 +6,7 @@ import InputWheel from "../../components/InputWheel";
 import SetWheel from "./SetWheel";
 import StatWheel from "./StatWheel";
 
-interface WheelComplexProps {
+interface WheelComplexProps extends React.HTMLAttributes<HTMLDivElement> {
   currentSet: number;
   setCurrentSet: Dispatch<SetStateAction<number>>;
   workout: { weight: number; reps: number; done: boolean }[][];
@@ -20,10 +20,12 @@ export default function WheelComplex({
   currentSet,
   setCurrentSet,
   workout,
+  setWorkout,
   currentExercise,
+  className,
 }: WheelComplexProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [highlightedStat, setHighlightedStat] = useState<number>(0);
+  const [highlightedStat, setHighlightedStat] = useState(0);
 
   const sets: boolean[] = [];
   const repsStats: number[] = [];
@@ -54,7 +56,9 @@ export default function WheelComplex({
   };
 
   return (
-    <div className="flex h-full items-center justify-center pl-5">
+    <div
+      className={cn("flex h-full items-center justify-center pl-5", className)}
+    >
       <div
         className="w-full h-full flex items-center"
         onTouchStart={handleTouchStart}
@@ -100,7 +104,28 @@ export default function WheelComplex({
       </div>
 
       <div className="w-24 shrink-0 h-full grid place-items-center">
-        <InputWheel value={0} min={0} max={0} changeValue={() => {}} />
+        <InputWheel
+          className="h-65 w-full"
+          value={
+            highlightedStat === 0
+              ? repsStats[currentSet]
+              : weightStats[currentSet]
+          }
+          min={0}
+          max={100}
+          changeValue={(v) => {
+            setWorkout((prev) => {
+              const updatedWorkout = [...prev];
+              const exerciseSets = [...updatedWorkout[currentExercise]];
+              exerciseSets[currentSet] = {
+                ...exerciseSets[currentSet],
+                [highlightedStat === 0 ? "reps" : "weight"]: v,
+              };
+              updatedWorkout[currentExercise] = exerciseSets;
+              return updatedWorkout;
+            });
+          }}
+        />
       </div>
     </div>
   );
@@ -118,19 +143,19 @@ function TitleAligner({ children, title, className = "" }: TitleAligner) {
       {title !== undefined ? (
         <span
           className={cn(
-            "w-full grid place-items-center text-zinc-500 h-6 text-xl",
+            "w-full grid place-items-center text-zinc-500 h-8 text-xl",
             className,
           )}
         >
           {title}
         </span>
       ) : (
-        <span className="h-6" />
+        <span className="h-8 block" />
       )}
 
       {children}
 
-      <span className="h-6" />
+      <span className="h-8 block" />
     </div>
   );
 }

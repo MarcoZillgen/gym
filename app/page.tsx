@@ -46,15 +46,14 @@ export default function Home() {
         <div className="aspect-square h-full grid place-items-center"></div>
       </header>
 
-      <div className="flex-1">
-        <WheelComplex
-          currentSet={currentSet}
-          setCurrentSet={setCurrentSet}
-          workout={workout}
-          currentExercise={currentExercise}
-          setWorkout={setWorkout}
-        />
-      </div>
+      <WheelComplex
+        className="flex-1"
+        currentSet={currentSet}
+        setCurrentSet={setCurrentSet}
+        workout={workout}
+        currentExercise={currentExercise}
+        setWorkout={setWorkout}
+      />
 
       <ProgressBar segments={workout.length} current={currentExercise} />
 

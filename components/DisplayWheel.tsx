@@ -16,7 +16,7 @@ export default function DisplayWheel<T>({
   className,
   ...props
 }: DisplayWheelProps<T>) {
-  const slots = [-3, -2, -1, 0, 1, 2, 3];
+  const slots = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
 
   return (
     <div
@@ -33,7 +33,7 @@ export default function DisplayWheel<T>({
         return (
           <motion.div
             key={itemIndex}
-            layout
+            layout="y"
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="grid place-items-center"
           >

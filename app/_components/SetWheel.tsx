@@ -22,12 +22,12 @@ export default function SetWheel({ sets, current, setCurrent }: SetWheelProps) {
 
     const className = cn(
       "text-xl h-6 grid place-items-center transition-all",
-      isDone && "text-purple-700 rounded-lg",
+      isDone && "text-purple-700",
       !isDone && "text-zinc-500",
       position === 0 && "h-12 text-xl font-medium",
       Math.abs(position) === 1 && "opacity-50",
       Math.abs(position) === 2 && "opacity-25",
-      Math.abs(position) === 3 && "opacity-0",
+      Math.abs(position) >= 3 && "opacity-0",
     );
 
     return (
@@ -35,7 +35,7 @@ export default function SetWheel({ sets, current, setCurrent }: SetWheelProps) {
         type="button"
         className={className}
         onClick={() => {
-          if (Math.abs(position) === 3) return;
+          if (Math.abs(position) >= 3) return;
           setCurrent(current + position);
         }}
       >
@@ -45,6 +45,11 @@ export default function SetWheel({ sets, current, setCurrent }: SetWheelProps) {
   };
 
   return (
-    <DisplayWheel items={items} current={current} renderItem={renderItem} />
+    <DisplayWheel
+      className="-my-10"
+      items={items}
+      current={current}
+      renderItem={renderItem}
+    />
   );
 }

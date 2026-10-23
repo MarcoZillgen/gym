@@ -30,7 +30,7 @@ export default function StatWheel({
       position === 0 && selected && "bg-purple-300 text-purple-900 rounded-lg",
       Math.abs(position) === 1 && "opacity-75",
       Math.abs(position) === 2 && "opacity-50",
-      Math.abs(position) === 3 && "opacity-0",
+      Math.abs(position) >= 3 && "opacity-0",
       position > 0 && "text-zinc-500",
     );
 
@@ -39,7 +39,7 @@ export default function StatWheel({
         type="button"
         className={className}
         onClick={() => {
-          if (Math.abs(position) === 3) return;
+          if (Math.abs(position) >= 3) return;
           select();
           setCurrent(current + position);
         }}
@@ -51,7 +51,7 @@ export default function StatWheel({
 
   return (
     <DisplayWheel
-      className="w-full"
+      className="w-full -my-10"
       items={stats}
       current={current}
       renderItem={renderItem}
