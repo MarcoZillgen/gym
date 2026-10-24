@@ -13,9 +13,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.className} h-full antialiased font-inter`}
+      className={`${inter.className} font-inter fixed h-full w-full overflow-hidden overscroll-y-none antialiased`}
     >
-      <body className="overscroll-none min-h-full flex flex-col">
+      <body className="fixed flex min-h-full w-full flex-col overflow-hidden overscroll-none overscroll-y-none">
         {children}
       </body>
     </html>

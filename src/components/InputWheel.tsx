@@ -8,7 +8,7 @@ import {
   useRef,
   type WheelEvent,
 } from "react";
-import { cn } from "@/lib/cn";
+import { cn } from "@/src/lib/cn";
 
 const PITCH = 16;
 
@@ -124,7 +124,7 @@ export default function InputWheel({
       onWheel={interrupt}
       onClick={handleClick}
       className={cn(
-        "flex flex-col items-center overflow-y-auto overscroll-contain snap-y snap-proximity scrollbar-none motion-safe:scroll-smooth touch-pan-y cursor-pointer",
+        "flex cursor-pointer touch-pan-y snap-y snap-proximity scrollbar-none flex-col items-center overflow-y-auto overscroll-contain motion-safe:scroll-smooth",
         "before:block before:h-[calc(50%-8px)] before:w-full before:shrink-0",
         "after:block after:h-[calc(50%-8px)] after:w-full after:shrink-0",
         className,
@@ -136,7 +136,7 @@ export default function InputWheel({
         return (
           <div
             key={tick}
-            className="h-4 w-full shrink-0 snap-center snap-always flex items-center"
+            className="flex h-4 w-full shrink-0 snap-center snap-always items-center"
           >
             <div
               className={cn(
