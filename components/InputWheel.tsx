@@ -13,9 +13,8 @@ import { cn } from "@/lib/cn";
 const PITCH = 16;
 
 const MASK = `
-  linear-gradient(to bottom, transparent 15%, black 40%, black 60%, transparent 85%),
-  radial-gradient(ellipse at center, black 50%, transparent 55%)
-`;
+  linear-gradient(to bottom, transparent 0%, black 40%, black 60%, transparent 100%),
+  radial-gradient(ellipse 80% 130% at center, black 40%, transparent 40%)`;
 const containerMask = {
   maskImage: MASK,
   WebkitMaskImage: MASK,
