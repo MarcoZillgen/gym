@@ -8,7 +8,7 @@ import {
   selectActiveValue,
   useWorkoutStore,
 } from "@/src/store/workout";
-import InputWheel from "../../components/InputWheel";
+import InputWheel from "../../../components/InputWheel";
 import SetWheel from "./SetWheel";
 import StatWheel from "./StatWheel";
 import TitleAligner from "./TitleAligner";
