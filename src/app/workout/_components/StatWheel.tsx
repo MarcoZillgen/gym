@@ -25,7 +25,7 @@ export default function StatWheel({ statIndex }: StatWheelProps) {
       highlight={
         <div
           className={cn(
-            "-z-10 h-12 w-3/4 rounded-lg bg-purple-300 transition-opacity",
+            "-z-10 h-12 w-3/4 rounded-lg bg-primary-alt transition-opacity",
             selected ? "opacity-100" : "opacity-0",
           )}
         />
@@ -39,8 +39,7 @@ export default function StatWheel({ statIndex }: StatWheelProps) {
           className={cn(
             "grid h-full place-items-center px-2 text-xl transition-all",
             position === 0 && "text-4xl",
-            position === 0 && selected && "text-purple-900",
-            position > 0 && "text-zinc-500",
+            position === 0 && selected && "text-text-primary-alt",
           )}
         >
           {value}

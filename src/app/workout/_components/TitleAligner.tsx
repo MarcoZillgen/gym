@@ -16,7 +16,7 @@ export default function TitleAligner({
       {title !== undefined ? (
         <span
           className={cn(
-            "grid h-8 w-full place-items-center text-xl text-zinc-500",
+            "grid h-8 w-full place-items-center text-xl",
             className,
           )}
         >

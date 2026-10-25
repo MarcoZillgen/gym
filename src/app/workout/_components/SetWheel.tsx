@@ -25,8 +25,8 @@ export default function SetWheel() {
             className={cn(
               "text-xl transition-all",
               isDone
-                ? "rounded-md bg-purple-300 p-1 text-purple-700"
-                : "text-zinc-500",
+                ? "rounded-md bg-primary-subtle p-1 text-text-primary"
+                : "text-text-standard",
               position === 0 && "font-medium",
             )}
           >

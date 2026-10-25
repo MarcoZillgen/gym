@@ -27,9 +27,9 @@ function ProgressSegment({ status }: ProgressSegmentProps) {
     <div
       className={cn(
         "h-2 w-full flex-1 rounded-xs transition-colors",
-        status === "done" && "bg-purple-500",
-        status === "progressing" && "bg-purple-300",
-        status === "todo" && "bg-zinc-300",
+        status === "done" && "bg-primary",
+        status === "progressing" && "bg-primary-alt dark:bg-text-primary-alt",
+        status === "todo" && "bg-bg-subtle",
       )}
     />
   );

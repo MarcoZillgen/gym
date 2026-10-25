@@ -13,8 +13,8 @@ export default function Home() {
   const nextStep = useWorkoutStore((state) => state.nextStep);
 
   return (
-    <div className="flex h-screen w-screen flex-col bg-zinc-100">
-      <header className="flex h-17.5 w-full text-zinc-900">
+    <div className="flex h-screen w-screen flex-col">
+      <header className="flex h-17.5 w-full">
         <button
           type="button"
           className="grid aspect-square h-full place-items-center"
@@ -33,7 +33,7 @@ export default function Home() {
 
       <ProgressBar />
 
-      <footer className="flex h-17.5 w-full text-zinc-900">
+      <footer className="flex h-17.5 w-full">
         <button
           type="button"
           className="grid aspect-square h-full place-items-center"

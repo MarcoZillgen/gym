@@ -140,7 +140,7 @@ export default function InputWheel({
           >
             <div
               className={cn(
-                "w-full rounded-full bg-zinc-900",
+                "w-full rounded-full bg-text-standard",
                 tick % 5 === 0 ? "h-0.5" : "h-px opacity-50",
               )}
             />
