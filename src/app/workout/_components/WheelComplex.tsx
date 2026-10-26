@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 import { cn } from "@/src/lib/cn";
 import {
-  selectActiveStats,
+  selectActiveStatNames,
   selectActiveValue,
-  useWorkoutStore,
-} from "@/src/store/workout";
+  useWorkoutSessionStore,
+} from "@/src/store/workoutSession";
 import InputWheel from "../../../components/InputWheel";
 import SetWheel from "./SetWheel";
 import StatWheel from "./StatWheel";
@@ -20,13 +19,11 @@ interface WheelComplexProps {
 export default function WheelComplex({ className }: WheelComplexProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
-  const statNames = useWorkoutStore(
-    useShallow((s) => selectActiveStats(s).map((stat) => stat.name)),
-  );
-  const activeStatValue = useWorkoutStore(selectActiveValue);
+  const statNames = useWorkoutSessionStore(selectActiveStatNames);
+  const activeStatValue = useWorkoutSessionStore(selectActiveValue);
 
-  const offsetCurrentSet = useWorkoutStore((s) => s.offsetCurrentSet);
-  const updateValue = useWorkoutStore((s) => s.updateValue);
+  const offsetCurrentSet = useWorkoutSessionStore((s) => s.offsetCurrentSet);
+  const updateValue = useWorkoutSessionStore((s) => s.updateValue);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.touches[0].clientY);

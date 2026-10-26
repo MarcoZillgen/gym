@@ -2,20 +2,28 @@
 
 import DisplayWheel from "@/src/components/DisplayWheel";
 import { cn } from "@/src/lib/cn";
-import { selectExercise, useWorkoutStore } from "@/src/store/workout";
+import {
+  selectActiveExerciseSession,
+  selectCurrentSetIndex,
+  selectCurrentStatIndex,
+  useWorkoutSessionStore,
+} from "@/src/store/workoutSession";
 
 interface StatWheelProps {
   statIndex: number; // 0 for weight, 1 for reps, etc.
 }
 
-export default function StatWheel({ statIndex }: StatWheelProps) {
-  const currentSet = useWorkoutStore((s) => s.currentSet);
-  const selected = useWorkoutStore((s) => s.currentStat === statIndex);
-  const exercise = useWorkoutStore(selectExercise);
-  const offsetCurrentSet = useWorkoutStore((s) => s.offsetCurrentSet);
-  const setHighlightedStat = useWorkoutStore((s) => s.setHighlightedStat);
+export default function MyStatComponent({ statIndex }: StatWheelProps) {
+  const currentSet = useWorkoutSessionStore(selectCurrentSetIndex);
+  const currentStat = useWorkoutSessionStore(selectCurrentStatIndex);
+  const exercise = useWorkoutSessionStore(selectActiveExerciseSession);
+  const selected = currentStat === statIndex;
 
-  const values = exercise.map((set) => set.stats[statIndex]?.value ?? 0);
+  const setCurrentStat = useWorkoutSessionStore((s) => s.setCurrentStat);
+  const setCurrentSet = useWorkoutSessionStore((s) => s.setCurrentSet);
+
+  const values =
+    exercise?.sets.map((set) => set.statValues[statIndex] ?? 0) ?? [];
 
   return (
     <DisplayWheel
@@ -31,8 +39,8 @@ export default function StatWheel({ statIndex }: StatWheelProps) {
         />
       }
       onSlotClick={(position) => {
-        setHighlightedStat(statIndex);
-        offsetCurrentSet(position);
+        setCurrentStat(statIndex);
+        setCurrentSet(position);
       }}
       renderItem={(value, position) => (
         <span

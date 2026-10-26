@@ -3,14 +3,19 @@
 import { CheckIcon } from "@radix-ui/react-icons";
 import DisplayWheel from "@/src/components/DisplayWheel";
 import { cn } from "@/src/lib/cn";
-import { selectExercise, useWorkoutStore } from "@/src/store/workout";
+import {
+  selectActiveExerciseSession,
+  selectCurrentSetIndex,
+  useWorkoutSessionStore,
+} from "@/src/store/workoutSession";
 
 export default function SetWheel() {
-  const currentSet = useWorkoutStore((s) => s.currentSet);
-  const exercise = useWorkoutStore(selectExercise);
-  const offsetCurrentSet = useWorkoutStore((s) => s.offsetCurrentSet);
+  const currentSet = useWorkoutSessionStore(selectCurrentSetIndex);
+  const exercise = useWorkoutSessionStore(selectActiveExerciseSession);
+  const offsetCurrentSet = useWorkoutSessionStore((s) => s.offsetCurrentSet);
 
-  const items = Array.from({ length: exercise.length }, (_, i) => i + 1);
+  const sets = exercise?.sets ?? [];
+  const items = Array.from({ length: sets.length }, (_, i) => i + 1);
 
   return (
     <DisplayWheel
@@ -19,11 +24,11 @@ export default function SetWheel() {
       current={currentSet}
       onSlotClick={offsetCurrentSet}
       renderItem={(item, position) => {
-        const isDone = exercise[item - 1]?.done ?? false;
+        const isDone = sets[item - 1]?.done ?? false;
         return (
           <span
             className={cn(
-              "text-xl transition-all",
+              "w-6 text-xl transition-all",
               isDone
                 ? "rounded-md bg-primary-subtle p-1 text-text-primary"
                 : "text-text-standard",

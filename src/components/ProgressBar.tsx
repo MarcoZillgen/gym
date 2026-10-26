@@ -1,16 +1,17 @@
 import { cn } from "@/src/lib/cn";
-import { useWorkoutStore } from "@/src/store/workout";
+import { useWorkoutSessionStore } from "@/src/store/workoutSession";
 
 export default function ProgressBar() {
-  const current = useWorkoutStore((state) => state.currentExercise);
-  const segments = useWorkoutStore((state) => state.workout.length);
+  const workout = useWorkoutSessionStore((state) => state.workout);
+  if (!workout || workout.exercises.length === 0) return null;
+
+  const current = workout.currentExercise;
 
   return (
     <div className="flex w-full gap-2 px-2 py-1">
-      {Array.from({ length: segments }).map((_, i) => (
+      {workout.exercises.map((ex, i) => (
         <ProgressSegment
-          // biome-ignore lint/suspicious/noArrayIndexKey: segment fixed
-          key={`segment-${i}`}
+          key={ex.id}
           status={current === i ? "progressing" : current < i ? "todo" : "done"}
         />
       ))}
