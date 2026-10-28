@@ -1,8 +1,13 @@
-import type { WorkoutSession, WorkoutTemplate } from "../types/workout";
+import type {
+  WorkoutHistory,
+  WorkoutSession,
+  WorkoutTemplate,
+} from "../types/workout";
 
 export function generateSessionByTemplate(wt: WorkoutTemplate): WorkoutSession {
   const ws = {
     id: crypto.randomUUID(),
+    name: wt.name,
     templateId: wt.id,
     startDate: new Date().toISOString(),
     currentExercise: 0,
@@ -24,9 +29,10 @@ export function generateSessionByTemplate(wt: WorkoutTemplate): WorkoutSession {
   return ws;
 }
 
-export function generateBlankSession() {
+export function generateBlankSession(): WorkoutSession {
   const ws = {
     id: crypto.randomUUID(),
+    name: "blank workout",
     startDate: new Date().toISOString(),
     currentExercise: 0,
     exercises: [],
@@ -34,3 +40,11 @@ export function generateBlankSession() {
 
   return ws;
 }
+
+export const toHistory = (w: WorkoutSession): WorkoutHistory => ({
+  id: w.id,
+  name: w.name,
+  templateId: w.templateId,
+  startDate: w.startDate,
+  endDate: w.endDate ?? new Date().toISOString(),
+});

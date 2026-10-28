@@ -13,6 +13,7 @@ export interface ExerciseTemplate {
 
 export interface WorkoutSession {
   id: string;
+  name: string;
   templateId?: string;
   startDate: string;
   endDate?: string;
@@ -38,6 +39,8 @@ export interface SetSession {
 
 export interface WorkoutHistory {
   id: string;
+  name: string;
   templateId?: string;
   startDate: string;
+  endDate: string;
 }
