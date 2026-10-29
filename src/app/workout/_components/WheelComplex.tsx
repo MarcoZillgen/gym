@@ -38,7 +38,7 @@ export default function WheelComplex({ className }: WheelComplexProps) {
 
   return (
     <div
-      className={cn("flex h-full items-center justify-center pl-5", className)}
+      className={cn("flex h-full w-full items-center justify-center pl-5", className)}
     >
       <div
         className="flex h-full w-full items-center"

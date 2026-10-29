@@ -32,7 +32,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex h-dvh w-full flex-col">
+    <>
       <Header />
 
       <main className="flex min-h-0 flex-1 flex-col gap-5 pb-6">
@@ -143,6 +143,6 @@ export default function Home() {
           </SectionBody>
         </Section>
       </main>
-    </div>
+    </>
   );
 }
