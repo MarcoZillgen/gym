@@ -41,7 +41,7 @@ export default function Home() {
             sectionTitle="statistics"
             Icon={ChevronRightIcon}
             onClick={() => {
-              /* TODO */
+              router.replace("/statistics")
             }}
             aria-label="open statistics"
           />
@@ -56,7 +56,7 @@ export default function Home() {
             sectionTitle="History"
             Icon={ChevronRightIcon}
             onClick={() => {
-              /* TODO */
+              router.replace("/history")
             }}
             aria-label="open history"
           />
@@ -68,7 +68,7 @@ export default function Home() {
                 key={h.id}
                 className="flex w-full justify-between py-3 text-left"
                 onClick={() => {
-                  /* TODO */
+                  router.replace(`/statistics?workout=${h.id}`)
                 }}
                 aria-label={`open ${h.name} history`}
               >
