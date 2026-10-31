@@ -20,7 +20,7 @@ export default function MyStatComponent({ statIndex }: StatWheelProps) {
   const selected = currentStat === statIndex;
 
   const setCurrentStat = useWorkoutSessionStore((s) => s.setCurrentStat);
-  const setCurrentSet = useWorkoutSessionStore((s) => s.setCurrentSet);
+  const offsetCurrentSet = useWorkoutSessionStore((s) => s.offsetCurrentSet);
 
   const values =
     exercise?.sets.map((set) => set.statValues[statIndex] ?? 0) ?? [];
@@ -39,8 +39,8 @@ export default function MyStatComponent({ statIndex }: StatWheelProps) {
         />
       }
       onSlotClick={(position) => {
+        offsetCurrentSet(position);
         setCurrentStat(statIndex);
-        setCurrentSet(position);
       }}
       renderItem={(value, position) => (
         <span
