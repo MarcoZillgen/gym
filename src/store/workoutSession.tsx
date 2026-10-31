@@ -7,9 +7,45 @@ import {
 } from "../lib/workout";
 import type {
   ExerciseSession,
+  SetSession,
   WorkoutSession,
   WorkoutTemplate,
 } from "../types/workout";
+
+const withActiveWorkout = (
+  state: WorkoutSessionState,
+  fn: (workout: WorkoutSession) => void,
+): void => {
+  const w = state.workout;
+  if (!w) return;
+  fn(w);
+};
+
+const withActiveExercise = (
+  state: WorkoutSessionState,
+  fn: (workout: WorkoutSession, exercise: ExerciseSession) => void,
+): void => {
+  withActiveWorkout(state, (w) => {
+    const ex = w.exercises[w.currentExercise];
+    if (!ex) return;
+    fn(w, ex);
+  });
+};
+
+const withActiveSet = (
+  state: WorkoutSessionState,
+  fn: (
+    workout: WorkoutSession,
+    exercise: ExerciseSession,
+    set: SetSession,
+  ) => void,
+): void => {
+  withActiveExercise(state, (w, ex) => {
+    const st = ex.sets[ex.currentSet];
+    if (!st) return;
+    fn(w, ex, st);
+  });
+};
 
 const EMPTY_ACTIVE_STAT_NAMES: string[] = [];
 export const selectActiveStatNames = (state: WorkoutSessionState): string[] => {
@@ -64,6 +100,8 @@ interface WorkoutSessionState {
   setCurrentExercise: (n: number) => void;
   // move to nth stat
   setCurrentStat: (n: number) => void;
+  // current set = b
+  setDoneState: (b: boolean) => void;
   // update currently highlighted value
   updateValue: (value: number) => void;
   // step to next stat, set, exercise
@@ -91,95 +129,76 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
       }),
 
     offsetCurrentSet: (offset) =>
-      set((state) => {
-        if (state.workout === null) return;
-
-        const w = state.workout;
-        const ex = w.exercises[w.currentExercise];
-        if (!ex) return;
-
-        ex.currentSet = clamp(0, ex.currentSet + offset, ex.sets.length - 1);
-      }),
+      set((state) =>
+        withActiveExercise(state, (_w, ex) => {
+          ex.currentSet = clamp(0, ex.currentSet + offset, ex.sets.length - 1);
+        }),
+      ),
 
     setCurrentSet: (n) =>
-      set((state) => {
-        if (state.workout === null) return;
-
-        const w = state.workout;
-        const ex = w.exercises[w.currentExercise];
-        if (!ex) return;
-
-        ex.currentSet = clamp(0, n, ex.sets.length - 1);
-      }),
+      set((state) =>
+        withActiveExercise(state, (_w, ex) => {
+          ex.currentSet = clamp(0, n, ex.sets.length - 1);
+        }),
+      ),
 
     setCurrentExercise: (n) =>
-      set((state) => {
-        if (state.workout === null) return;
-
-        const w = state.workout;
-
-        w.currentExercise = clamp(0, n, w.exercises.length - 1);
-      }),
+      set((state) =>
+        withActiveWorkout(state, (w) => {
+          w.currentExercise = clamp(0, n, w.exercises.length - 1);
+        }),
+      ),
 
     setCurrentStat: (n) =>
-      set((state) => {
-        if (state.workout === null) return;
+      set((state) =>
+        withActiveSet(state, (_w, ex, st) => {
+          st.currentStat = clamp(0, n, ex.statNames.length - 1);
+        }),
+      ),
 
-        const w = state.workout;
-        const ex = w.exercises[w.currentExercise];
-        if (!ex) return;
-        const st = ex.sets[ex.currentSet];
-        if (!st) return;
-
-        st.currentStat = clamp(0, n, ex.statNames.length - 1);
-      }),
+    setDoneState: (d: boolean) =>
+      set((state) =>
+        withActiveSet(state, (_w, _ex, st) => {
+          st.done = d;
+        }),
+      ),
 
     updateValue: (value) =>
-      set((state) => {
-        if (state.workout === null) return;
-
-        const w = state.workout;
-        const ex = w.exercises[w.currentExercise];
-        if (!ex) return;
-        const st = ex.sets[ex.currentSet];
-        if (!st) return;
-
-        st.statValues[st.currentStat] = value;
-      }),
+      set((state) =>
+        withActiveSet(state, (_w, _ex, st) => {
+          st.statValues[st.currentStat] = value;
+        }),
+      ),
 
     nextStep: () =>
       set((state) => {
-        if (state.workout === null) return;
+        withActiveSet(state, (w, ex, st) => {
+          // stat step
+          if (st.statValues.length - 1 > st.currentStat) {
+            st.currentStat++;
+            return;
+          }
+          // was last stat => jump set
+          st.done = true;
+          st.currentStat = 0;
+          // set step
+          if (ex.sets.length - 1 > ex.currentSet) {
+            ex.currentSet++;
+            return;
+          }
+          // was last set => jump exercise
+          ex.done = true;
+          ex.currentSet = 0;
 
-        const w = state.workout;
-        const ex = w.exercises[w.currentExercise];
-        if (!ex) return;
-
-        const st = ex.sets[ex.currentSet];
-        if (!st) return;
-
-        if (st.statValues.length - 1 > st.currentStat) {
-          st.currentStat++;
-          return;
-        }
-
-        st.done = true;
-        st.currentStat = 0;
-
-        if (ex.sets.length - 1 > ex.currentSet) {
-          ex.currentSet++;
-          return;
-        }
-
-        ex.done = true;
-        ex.currentSet = 0;
-
-        if (w.exercises.length - 1 > w.currentExercise) {
-          w.currentExercise++;
-        } else {
-          w.endDate = new Date().toISOString();
-          // TODO: trigger completion
-        }
+          if (w.exercises.length - 1 > w.currentExercise) {
+            // exercise step
+            w.currentExercise++;
+          } else {
+            // was lust exercise => workout done
+            w.endDate = new Date().toISOString();
+            // TODO: trigger completion
+          }
+        });
       }),
   })),
 );

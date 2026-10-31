@@ -13,6 +13,7 @@ export default function SetWheel() {
   const currentSet = useWorkoutSessionStore(selectCurrentSetIndex);
   const exercise = useWorkoutSessionStore(selectActiveExerciseSession);
   const offsetCurrentSet = useWorkoutSessionStore((s) => s.offsetCurrentSet);
+  const setDoneState = useWorkoutSessionStore((s) => s.setDoneState);
 
   const sets = exercise?.sets ?? [];
   const items = Array.from({ length: sets.length }, (_, i) => i + 1);
@@ -22,7 +23,10 @@ export default function SetWheel() {
       className="-my-10"
       items={items}
       current={currentSet}
-      onSlotClick={offsetCurrentSet}
+      onSlotClick={(position: number) => {
+        offsetCurrentSet(position);
+        setDoneState(false);
+      }}
       renderItem={(item, position) => {
         const isDone = sets[item - 1]?.done ?? false;
         return (
@@ -35,7 +39,7 @@ export default function SetWheel() {
               position === 0 && "font-medium",
             )}
           >
-            {isDone ? <CheckIcon className="size-4 scale-150" /> : item}
+            {isDone ? <CheckIcon className="scale-150" /> : item}
           </span>
         );
       }}
