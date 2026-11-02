@@ -1,34 +1,43 @@
 "use client";
 
 import { CheckIcon } from "@radix-ui/react-icons";
+import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 import DisplayWheel from "@/src/components/DisplayWheel";
 import { cn } from "@/src/lib/cn";
 import {
-  selectActiveExerciseSession,
   selectCurrentSetIndex,
   useWorkoutSessionStore,
 } from "@/src/store/workoutSession";
 
 export default function SetWheel() {
   const currentSet = useWorkoutSessionStore(selectCurrentSetIndex);
-  const exercise = useWorkoutSessionStore(selectActiveExerciseSession);
   const offsetCurrentSet = useWorkoutSessionStore((s) => s.offsetCurrentSet);
   const setDoneState = useWorkoutSessionStore((s) => s.setDoneState);
+  const setDones = useWorkoutSessionStore(
+    useShallow((s) => {
+      const ex = s.workout?.exercises[s.workout.currentExercise];
+      return ex?.sets.map((set) => set.done) ?? [];
+    }),
+  );
 
-  const sets = exercise?.sets ?? [];
-  const items = Array.from({ length: sets.length }, (_, i) => i + 1);
+  const items = useMemo(
+    () => Array.from({ length: setDones.length }, (_, i) => i + 1),
+    [setDones.length],
+  );
 
   return (
     <DisplayWheel
       className="-my-10"
       items={items}
       current={currentSet}
-      onSlotClick={(position: number) => {
-        offsetCurrentSet(position);
+      onSlotClick={(offset: number) => {
+        offsetCurrentSet(offset);
         setDoneState(false);
       }}
       renderItem={(item, position) => {
-        const isDone = sets[item - 1]?.done ?? false;
+        const isDone = setDones[item - 1] ?? false;
+
         return (
           <span
             className={cn(

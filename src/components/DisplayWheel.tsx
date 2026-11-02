@@ -13,7 +13,7 @@ interface DisplayWheelProps<T>
   items: T[];
   current: number;
   renderItem: (item: T, position: number) => React.ReactNode;
-  onSlotClick?: (position: number) => void;
+  onSlotClick?: (offset: number) => void;
   reach?: number;
   highlight?: React.ReactNode;
 }

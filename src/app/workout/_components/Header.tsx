@@ -1,13 +1,13 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/src/components/Navbar";
-import {
-  selectActiveExerciseSession,
-  useWorkoutSessionStore,
-} from "@/src/store/workoutSession";
+import { useWorkoutSessionStore } from "@/src/store/workoutSession";
 
 export default function Header() {
-  const exercise = useWorkoutSessionStore(selectActiveExerciseSession);
+  const exerciseName = useWorkoutSessionStore(
+    (s) => s.workout?.exercises[s.workout.currentExercise]?.name,
+  );
+
   const router = useRouter();
 
   return (
@@ -22,7 +22,7 @@ export default function Header() {
         </button>
 
         <div className="grid h-full w-full place-items-center text-xl font-normal">
-          {exercise?.name}
+          {exerciseName}
         </div>
 
         <div className="grid aspect-square h-full place-items-center"></div>

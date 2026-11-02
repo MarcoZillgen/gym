@@ -4,10 +4,9 @@ import { useState } from "react";
 import { cn } from "@/src/lib/cn";
 import {
   selectActiveStatNames,
-  selectActiveValue,
   useWorkoutSessionStore,
 } from "@/src/store/workoutSession";
-import InputWheel from "../../../components/InputWheel";
+import ActiveInputSlot from "./ActiveInputSlot";
 import SetWheel from "./SetWheel";
 import StatWheel from "./StatWheel";
 import TitleAligner from "./TitleAligner";
@@ -20,10 +19,6 @@ export default function WheelComplex({ className }: WheelComplexProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const statNames = useWorkoutSessionStore(selectActiveStatNames);
-  const activeStatValue = useWorkoutSessionStore(selectActiveValue);
-
-  const offsetCurrentSet = useWorkoutSessionStore((s) => s.offsetCurrentSet);
-  const updateValue = useWorkoutSessionStore((s) => s.updateValue);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.touches[0].clientY);
@@ -31,8 +26,12 @@ export default function WheelComplex({ className }: WheelComplexProps) {
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStart === null) return;
+
     const diff = touchStart - e.changedTouches[0].clientY;
-    if (Math.abs(diff) > 30) offsetCurrentSet(diff > 0 ? 1 : -1);
+    if (Math.abs(diff) > 30) {
+      useWorkoutSessionStore.getState().offsetCurrentSet(diff > 0 ? 1 : -1);
+    }
+
     setTouchStart(null);
   };
 
@@ -52,25 +51,19 @@ export default function WheelComplex({ className }: WheelComplexProps) {
           <SetWheel />
         </TitleAligner>
 
-        {statNames.map((name, index) => (
+        {statNames.map((name, i) => (
           <TitleAligner
-            key={name}
+            key={`stat-wheel-${name}`}
             title={name.charAt(0).toUpperCase() + name.slice(1)}
             className="w-full"
           >
-            <StatWheel statIndex={index} />
+            <StatWheel statIndex={i} />
           </TitleAligner>
         ))}
       </div>
 
       <div className="grid h-full w-24 shrink-0 place-items-center">
-        <InputWheel
-          className="h-65 w-full"
-          value={activeStatValue}
-          min={0}
-          max={100}
-          changeValue={updateValue}
-        />
+        <ActiveInputSlot />
       </div>
     </div>
   );

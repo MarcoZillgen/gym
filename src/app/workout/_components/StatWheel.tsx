@@ -1,9 +1,9 @@
 "use client";
 
+import { useShallow } from "zustand/react/shallow";
 import DisplayWheel from "@/src/components/DisplayWheel";
 import { cn } from "@/src/lib/cn";
 import {
-  selectActiveExerciseSession,
   selectCurrentSetIndex,
   selectCurrentStatIndex,
   useWorkoutSessionStore,
@@ -13,17 +13,18 @@ interface StatWheelProps {
   statIndex: number; // 0 for weight, 1 for reps, etc.
 }
 
-export default function MyStatComponent({ statIndex }: StatWheelProps) {
+export default function StatWheel({ statIndex }: StatWheelProps) {
   const currentSet = useWorkoutSessionStore(selectCurrentSetIndex);
-  const currentStat = useWorkoutSessionStore(selectCurrentStatIndex);
-  const exercise = useWorkoutSessionStore(selectActiveExerciseSession);
-  const selected = currentStat === statIndex;
+  const selected = useWorkoutSessionStore(
+    (s) => selectCurrentStatIndex(s) === statIndex,
+  );
 
-  const setCurrentStat = useWorkoutSessionStore((s) => s.setCurrentStat);
-  const offsetCurrentSet = useWorkoutSessionStore((s) => s.offsetCurrentSet);
-
-  const values =
-    exercise?.sets.map((set) => set.statValues[statIndex] ?? 0) ?? [];
+  const values = useWorkoutSessionStore(
+    useShallow((s) => {
+      const ex = s.workout?.exercises[s.workout.currentExercise];
+      return ex?.sets.map((set) => set.statValues[statIndex] ?? 0) ?? [];
+    }),
+  );
 
   return (
     <DisplayWheel
@@ -38,16 +39,17 @@ export default function MyStatComponent({ statIndex }: StatWheelProps) {
           )}
         />
       }
-      onSlotClick={(position) => {
-        offsetCurrentSet(position);
-        setCurrentStat(statIndex);
+      onSlotClick={(offset) => {
+        const store = useWorkoutSessionStore.getState();
+        store.offsetCurrentSet(offset);
+        store.setCurrentStat(statIndex);
       }}
-      renderItem={(value, position) => (
+      renderItem={(value, offset) => (
         <span
           className={cn(
             "grid h-full place-items-center px-2 text-xl transition-all",
-            position === 0 && "text-4xl",
-            position === 0 && selected && "text-text-primary-alt",
+            offset === 0 && "text-4xl",
+            offset === 0 && selected && "text-text-primary-alt",
           )}
         >
           {value}
