@@ -16,7 +16,7 @@ export default function RecoveryBars({ restDays, name }: RecoveryBarsProps) {
               i < restDays ? "bg-primary" : "bg-bg-subtle",
             )}
             // biome-ignore lint/suspicious/noArrayIndexKey: static
-            key={`${name}-${i}`}
+            key={`recoverybar-${name}-${i}`}
           />
         ))}
       </div>

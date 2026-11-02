@@ -1,13 +1,10 @@
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 import { Navbar } from "@/src/components/Navbar";
+import { useSettingsStore } from "@/src/store/settings";
 
 export default function Header() {
-  const [isDark, setIsDark] = useState<boolean>(false);
-  const toggleDark = () => {
-    document.documentElement.classList.toggle("dark");
-    setIsDark(!isDark);
-  };
+  const toggleTheme = useSettingsStore((s) => s.toggleTheme);
+  const theme = useSettingsStore((s) => s.theme);
 
   return (
     <Navbar asChild>
@@ -19,9 +16,11 @@ export default function Header() {
         <button
           type="button"
           className="grid place-items-center p-6"
-          onClick={toggleDark}
+          onClick={() => {
+            toggleTheme();
+          }}
         >
-          {isDark ? (
+          {theme === "dark" ? (
             <SunIcon width={24} height={24} />
           ) : (
             <MoonIcon width={24} height={24} />

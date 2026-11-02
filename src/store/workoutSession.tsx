@@ -92,9 +92,6 @@ export const selectActiveExerciseSession = (
 interface WorkoutSessionState {
   workout: WorkoutSession | null;
 
-  hasHydrated: boolean;
-  setHasHydrated: (hydrated: boolean) => void;
-
   startWorkout: (wt?: WorkoutTemplate) => void;
   endWorkout: () => void;
   // offset current set
@@ -117,12 +114,6 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
   persist(
     immer((set) => ({
       workout: null,
-      hasHydrated: false,
-
-      setHasHydrated: (hydrated: boolean) =>
-        set((state) => {
-          state.hasHydrated = hydrated;
-        }),
 
       startWorkout: (wt) =>
         set((state) => {
@@ -219,10 +210,7 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
     })),
     {
       name: "workout-session-storage",
-      storage: createJSONStorage(() => indexedDBStorage),
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-      },
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );
